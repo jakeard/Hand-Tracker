@@ -1,4 +1,4 @@
-from director import Director
+from logic.director import Director
 
 if __name__ == '__main__':
     start = Director()

@@ -1,7 +1,7 @@
 import cv2
 import mediapipe as mp
 import time
-from finger import Finger
+from logic.finger import Finger
 
 class Director:
     def __init__(self):
@@ -19,7 +19,6 @@ class Director:
         hands = mp_hands.Hands()
         mp_draw = mp.solutions.drawing_utils
 
-        # ind = 0
         while True:
             _, img = cap.read()
             img_RGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
@@ -35,15 +34,15 @@ class Director:
                             tracker[count] = [(lm.x, lm.y, lm.z)]
                             continue
                         tracker[count].append((lm.x, lm.y, lm.z))
-                    self.set_finger_loc(tracker)
-                    mp_draw.draw_landmarks(img, hand_lmks, mp_hands.HAND_CONNECTIONS)
+                    mp_draw.draw_landmarks(img, hand_lmks, mp_hands.HAND_CONNECTIONS, mp_draw.DrawingSpec(color=(0, 0, 255), thickness=2, circle_radius=2), mp_draw.DrawingSpec(color=(255, 0, 0), thickness=2, circle_radius=2))
+                self.set_finger_loc(tracker)
+
             cv2.imshow("Image", img)
             cv2.waitKey(1)
-            # if ind % 10 == 0:
-                # print(self.pointer.get_pos())
-            # ind += 1
     
     def set_finger_loc(self, tracker):
         for i, finger in enumerate(self.fingers):
             current = i + 1
             finger.set_pos(tracker[current][0], tracker[current][1], tracker[current][2], tracker[current][3])
+    
+    # def record_finger_pos(self, tracker):
