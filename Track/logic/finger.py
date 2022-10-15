@@ -20,7 +20,7 @@ class Finger:
         return (self._base, self._low, self._mid, self._top)
     
     def get_specific_pos(self, pos):
-        if pos == 'high':
+        if pos == 'top':
             point = self._top
         elif pos == 'low':
             point = self._low
