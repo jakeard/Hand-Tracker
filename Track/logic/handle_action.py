@@ -1,6 +1,11 @@
 import cv2
 import mediapipe as mp
 from logic.finger import Finger
+# import autoit
+import pyautogui
+import pydirectinput as pdi
+
+pdi.PAUSE = 0
 
 class Handle_Action:
     def __init__(self, fingers):
@@ -10,10 +15,6 @@ class Handle_Action:
         self.middle = fingers[2]
         self.ring = fingers[3]
         self.pinky = fingers[4]
-
-        self.check()
-        # self.unpack(fingers)
-        # self.thumb, self.pointer, self.middle, self.ring, self.pinky = self.unpack(fingers)
         
 
     def check(self):
@@ -22,4 +23,5 @@ class Handle_Action:
             self.move_mouse()
     
     def move_mouse(self):
-        pass
+        (x, y) = self.pointer.get_specific_pos('top')
+        pdi.moveTo(x * 3, y)
