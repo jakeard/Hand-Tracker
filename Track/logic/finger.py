@@ -3,7 +3,8 @@ import mediapipe as mp
 import time
 
 class Finger:
-    def __init__(self, point1=0, point2=0, point3=0, point4=0):
+    def __init__(self, name, point1=0, point2=0, point3=0, point4=0):
+        self._name = name
         self._base = point1
         self._low = point2
         self._mid = point3
@@ -19,12 +20,15 @@ class Finger:
         return (self._base, self._low, self._mid, self._top)
     
     def get_specific_pos(self, pos):
-        if pos == "base":
-            point = self._base
-        elif pos == "low":
-            point = self._low
-        elif pos == "mid":
-            point = self._mid
-        else:
+        if pos == 'high':
             point = self._top
+        elif pos == 'low':
+            point = self._low
+        if pos == 'base':
+            point = self._base
+        elif pos == 'mid':
+            point = self._mid
         return point
+    
+    def get_name(self):
+        return self._name
