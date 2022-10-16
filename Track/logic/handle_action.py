@@ -4,6 +4,7 @@ from logic.finger import Finger
 # import autoit
 import pyautogui
 import pydirectinput as pdi
+from logic import constants
 
 pdi.PAUSE = 0
 
