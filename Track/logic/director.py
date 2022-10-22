@@ -1,6 +1,7 @@
 import cv2
 import mediapipe as mp
 import time
+import numpy as np
 from logic.handle_action import Handle_Action
 from logic.finger import Finger
 
@@ -12,33 +13,37 @@ class Director:
         self.ring = Finger('ring')
         self.pinky = Finger('pinky')
         self.fingers = [self.thumb, self.pointer, self.middle, self.ring, self.pinky]
+        self.actions = Handle_Action(self.fingers)
     
     def run(self):
         cap = cv2.VideoCapture(0)
-
         mp_hands = mp.solutions.hands
         hands = mp_hands.Hands()
         mp_draw = mp.solutions.drawing_utils
 
         while True:
             _, img = cap.read()
+            img = cv2.flip(img, 1)
             img_RGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
             results = hands.process(img_RGB)
-            print(img.shape)
 
             if results.multi_hand_landmarks:
                 for hand_lmks in results.multi_hand_landmarks:
                     tracker = {}
                     count = -1
                     for id, lm in enumerate(hand_lmks.landmark):
+                        h, w, _ = img.shape
+                        lm_x, lm_y = int(lm.x * w), int(lm.y * h)
                         if id % 4 != 1 and count != -1:
-                            tracker[count].append((lm.x, lm.y, lm.z))
+                            tracker[count].append((lm_x, lm_y))
                         else:
                             count += 1
-                            tracker[count] = [(lm.x, lm.y, lm.z)]
+                            tracker[count] = [(lm_x, lm_y)]
+                        # if id == 8:
+                        #     print(f'x: {lm_x}, y: {lm_y}')
                     mp_draw.draw_landmarks(img, hand_lmks, mp_hands.HAND_CONNECTIONS, mp_draw.DrawingSpec(color=(0, 0, 255), thickness=2, circle_radius=2), mp_draw.DrawingSpec(color=(0, 255, 0), thickness=2, circle_radius=2))
                 self.set_finger_loc(tracker)
-                Handle_Action(self.fingers)
+                self.actions.check()
 
             cv2.imshow("Image", img)
             cv2.waitKey(1)
