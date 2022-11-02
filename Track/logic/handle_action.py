@@ -23,7 +23,7 @@ class Handle_Action:
         
 
     def check(self, hands):
-        hand = hands[0]
+        # hand = hands[0]
         open = [x.get_name() for x in self.fingers if x.get_specific_pos('top')[1] < x.get_specific_pos('low')[1]]
         # if hand == 'Right':
         #     if self.thumb.get_specific_pos('top')[0] < self.pointer.get_specific_pos('base')[0]:
