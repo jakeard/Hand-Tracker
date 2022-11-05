@@ -10,13 +10,13 @@ from logic.finger import Finger
 
 class Director:
     def __init__(self):
-        self.thumb = Finger('thumb')
-        self.pointer = Finger('pointer')
-        self.middle = Finger('middle')
-        self.ring = Finger('ring')
-        self.pinky = Finger('pinky')
-        self.fingers = [self.thumb, self.pointer, self.middle, self.ring, self.pinky]
-        self.actions = Handle_Action(self.fingers)
+        self._thumb = Finger('thumb')
+        self._pointer = Finger('pointer')
+        self._middle = Finger('middle')
+        self._ring = Finger('ring')
+        self._pinky = Finger('pinky')
+        self._fingers = [self._thumb, self._pointer, self._middle, self._ring, self._pinky]
+        self._actions = Handle_Action(self._fingers)
     
     def run(self):
         cap = cv2.VideoCapture(0)
@@ -42,21 +42,21 @@ class Director:
                     count = -1
                     for id, lm in enumerate(hand_lmks.landmark):
                         h, w, _ = img.shape
-                        lm_x, lm_y = int(lm.x * w), int(lm.y * h)
+                        lm_x, lm_y, lm_z = int(lm.x * w), int(lm.y * h), lm.x
                         if id % 4 != 1 and count != -1:
-                            tracker[count].append((lm_x, lm_y))
+                            tracker[count].append((lm_x, lm_y, lm_z))
                         else:
                             count += 1
-                            tracker[count] = [(lm_x, lm_y)]
+                            tracker[count] = [(lm_x, lm_y, lm_z)]
                         # if id == 8:
                         #     print(f'x: {lm_x}, y: {lm_y}')
                     mp_draw.draw_landmarks(img, hand_lmks, mp_hands.HAND_CONNECTIONS, mp_draw.DrawingSpec(color=(0, 0, 255), thickness=2, circle_radius=2), mp_draw.DrawingSpec(color=(0, 255, 0), thickness=2, circle_radius=2))
-                self.set_finger_loc(tracker)
-                self.actions.check(curr_hand)
+                self._set_finger_loc(tracker)
+                self._actions.check(curr_hand)
 
             cv2.imshow("Image", img)
             cv2.waitKey(1)
     
-    def set_finger_loc(self, tracker):
-        for i, finger in enumerate(self.fingers):
+    def _set_finger_loc(self, tracker):
+        for i, finger in enumerate(self._fingers):
             finger.set_pos(tracker[i + 1][0], tracker[i + 1][1], tracker[i + 1][2], tracker[i + 1][3])
