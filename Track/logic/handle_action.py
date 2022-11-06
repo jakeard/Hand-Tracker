@@ -53,7 +53,7 @@ class Handle_Action:
     
     def _get_open_fingers(self):
         open = [x.get_name() for x in self._fingers if x.get_specific_pos('top')[1] < x.get_specific_pos('mid')[1] and x.get_name() != 'thumb']
-        if self._thumb.get_specific_pos('top')[0] <= self._pointer.get_specific_pos('base')[0] - 20:
+        if self._thumb.get_specific_pos('top')[0] <= self._pointer.get_specific_pos('base')[0] - 50:
             open.append('thumb')
 
         # if 'thumb' not in open:

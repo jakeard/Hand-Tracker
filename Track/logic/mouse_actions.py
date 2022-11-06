@@ -22,11 +22,11 @@ class Mouse_Actions:
     def check_match(self, open):
         if not self._can_click_left or not self._can_click_right:
             self._reset_can_clicks(open)
-        self._check_move_mouse(open)
+        self._check_scroll_up(open)
+        self._check_scroll_down(open)
         self._check_left_click(open)
         self._check_right_click(open)
-        # self._check_scroll_up(open)
-        # self._check_scroll_down(open)
+        self._check_move_mouse(open)
     
     def _reset_can_clicks(self, open):
         if 'thumb' not in open:
@@ -56,12 +56,14 @@ class Mouse_Actions:
             self._click('right')
     
     def _check_scroll_up(self, open):
-        if open == ['pointer', 'ring']:
-            pass
+        if open == ['pointer', 'middle', 'ring']:
+            # print('scroll up')
+            self._scroll('up')
 
     def _check_scroll_down(self, open):
-        if open == ['pointer', 'ring']:
-            pass
+        if open == ['pointer', 'middle', 'ring', 'pinky']:
+            # print('scroll down')
+            self._scroll('down')
 
     def _move(self):
         (x, y, z) = self._pointer.get_specific_pos('top')
