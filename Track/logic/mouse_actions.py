@@ -71,8 +71,8 @@ class Mouse_Actions:
         x = np.interp(x, (150, 490), (0, 1920))
         y = np.interp(y, (100, 250), (0, 1080))
 
-        curx = round(self._prev_pros[0] + (x - self._prev_pros[0]) / 2)
-        cury = round(self._prev_pros[1] + (y - self._prev_pros[1]) / 2)
+        curx = round(self._prev_pros[0] + (x - self._prev_pros[0]) / 3)
+        cury = round(self._prev_pros[1] + (y - self._prev_pros[1]) / 3)
 
         self._prev_pros = (curx, cury)
 

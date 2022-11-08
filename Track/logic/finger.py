@@ -1,8 +1,5 @@
-import cv2
-import mediapipe as mp
-import time
 
-class Finger:
+class Finger():
     def __init__(self, name, point1=0, point2=0, point3=0, point4=0):
         self._name = name
         self._base = point1
@@ -24,7 +21,7 @@ class Finger:
             point = self._top
         elif pos == 'low':
             point = self._low
-        if pos == 'base':
+        elif pos == 'base':
             point = self._base
         elif pos == 'mid':
             point = self._mid
