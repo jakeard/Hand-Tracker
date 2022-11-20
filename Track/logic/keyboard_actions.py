@@ -1,5 +1,7 @@
-import autoit
-from pynput.keyboard import Key, Controller
+# import autoit
+import pyautogui
+import pydirectinput as pdi
+# from pynput.keyboard import Key, Controller
 import time
 
 class Keyboard_Actions:
@@ -11,22 +13,24 @@ class Keyboard_Actions:
         self._ring = fingers[3]
         self._pinky = fingers[4]
         # self._prev_pros = (0, 0)
-        self._pressed = 'z'
+        self._pressed = None
         # self._press = None
         # self._currently_pressed = None
-        self._keyboard = Controller()
+        # self._keyboard = Controller()
     
     def check_match(self, open):
         press = None
         if open == ['pointer']:
-            press = 'w'
+            self._press_key('w')
+            # press = 'w'
             # self._keyboard.release(self._pressed)
             # self._keyboard.press('w')
             # self._pressed = 'w'
             # self._keyboard.release('w')
             # autoit.send('W')
         elif open == ['pointer', 'middle']:
-            press = 'a'
+            self._press_key('a')
+            # press = 'a'
             # self._press_key('a')
             # self._keyboard.release(self._pressed)
             # self._keyboard.press('a')
@@ -34,7 +38,8 @@ class Keyboard_Actions:
             # self._pressed = 'a'
             # autoit.send('A')
         elif open == ['pointer', 'middle', 'ring']:
-            press = 's'
+            self._press_key('s')
+            # press = 's'
             # self._press_key('s')
             # self._keyboard.press('w')
             # self._keyboard.release(self._pressed)
@@ -43,7 +48,8 @@ class Keyboard_Actions:
             # autoit.send('S')
         elif open == ['pointer', 'middle', 'ring', 'pinky']:
             # print('AHHHHHHHHHHHHHHHHHHHHHHHHH')
-            press = 'd'
+            self._press_key('d')
+            # press = 'd'
         # else:
             # press = None
             # self._press_key('d')
@@ -53,7 +59,6 @@ class Keyboard_Actions:
             # autoit.send('D')
         # else:
             # self._keyboard.release(self._pressed)
-        self._press_key(press)
         # autoit.send()
         # self._check_w(open)
     
@@ -65,9 +70,13 @@ class Keyboard_Actions:
     def _press_key(self, key):
         # self._keyboard.release(self._pressed)
         # if key is not None:
-        if key != self._pressed:
-            self._keyboard.release(key)
-        if key is not None:
-            self._keyboard.press(key)
-        self._pressed = key
+        if key and self._pressed != key:
+            # try:
+            pdi.keyUp(self._pressed)
+            # except:
+                # pass
+            pdi.keyDown(key)
+            self._pressed = key
+        elif not key:
+            pdi.keyUp(self._pressed)
     # def _check_w(self, open):
