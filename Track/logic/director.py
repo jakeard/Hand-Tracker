@@ -85,7 +85,6 @@ class Director:
     def _asl(self):
     # Checks if hand positions match to an action (sign language letters)
         try:
-            # print(self._hand1.get_open())
             self._signs.check_letter(self._hand1.get_open())
         except:
             pass
