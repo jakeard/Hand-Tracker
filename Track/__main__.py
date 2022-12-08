@@ -49,19 +49,4 @@ if __name__ == '__main__': # If this is the file the program is started in, begi
         expand=True
     )
 
-    # root.mainloop() # Open the GUI window and wait for input
-    start = Director('asl')
-    start.run()
-
-
-
-    # processes = [mp.Process(target=start.run, args=()), mp.Process(target=start.run, args=())]
-    # processes.append(mp.Process(target=start.run, args=()), mp.Process(target=start.run, args=()))
-    # p = mp.Process(target=start.run, args=())
-    # p = mp.Process(target=start.run, args=())
-    # for p in processes:
-        # print('time')
-        # p.start()
-    # for p in processes:
-        # p.join()
-    # start.run()
+    root.mainloop() # Open the GUI window and wait for input
