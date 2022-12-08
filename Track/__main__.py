@@ -49,7 +49,9 @@ if __name__ == '__main__': # If this is the file the program is started in, begi
         expand=True
     )
 
-    root.mainloop() # Open the GUI window and wait for input
+    # root.mainloop() # Open the GUI window and wait for input
+    start = Director('asl')
+    start.run()
 
 
 
