@@ -14,15 +14,17 @@ Some tools that I used to make this program are:
 * VSCode
 * OpenCV-Python Library
 * MediaPipe Library
+* PyAutoGUI Library
+* PyDirectInput Library
+* AutoIt Library
 
 # Useful Websites
 
-* [Hi](https://google.com)
-* [Hi](https://google.com)
-* [Hi](https://google.com)
+* [MediaPipe Website](https://google.github.io/mediapipe/)
+* [MediaPipe Hands](https://google.github.io/mediapipe/solutions/hands)
 
 # Future Work
 
-* Item 1
-* Item 2
-* Item 3
+* Smoothen out mouse movement
+* Facial Mapping
+* Item Detection
