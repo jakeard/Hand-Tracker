@@ -19,84 +19,78 @@ class Mouse_Actions:
         self._ring = fingers[3]
         self._pinky = fingers[4]
         self._prev_pros = (0, 0)
-        self._can_click_left = True
-        self._can_click_right = True
-    #     self._movable = self._create_allowed_moves()
-
-    # def _create_allowed_moves(self):
-    #     moves = [['pointer'], ['pointer', 'thumb'], ['pointer', 'middle']]
-    #     return moves
+        self._clicked = None
+        self._movable = (['pointer'], ['pointer', 'thumb'], ['pointer', 'middle'])
     
     def check_match(self, open):
     # Compares open fingers to what is needed to do a specific action
-        if not self._can_click_left or not self._can_click_right:
-            self._reset_can_clicks(open)
+        self._check_reset_clicks(open)
         self._check_scroll_up(open)
         self._check_scroll_down(open)
         self._check_left_click(open)
         self._check_right_click(open)
         self._check_move_mouse(open)
     
-    def _reset_can_clicks(self, open):
+    def _check_reset_clicks(self, open):
     # Resets the can_click variable for left and right click
-        if 'thumb' not in open:
-            self._can_click_left = True
-        if 'middle' not in open:
-            self._can_click_right = True
+        if open != ['pointer', 'thumb'] and open != ['pointer', 'middle'] and self._clicked is not None:
+            self._release_click(self._clicked)
+            self._clicked = None
+        if open != ['pointer', 'thumb'] and self._clicked == 'left':
+            self._release_click(self._clicked)
+            self._clicked = None
+        if open != ['pointer', 'middle'] and self._clicked == 'right':
+            self._release_click(self._clicked)
+            self._clicked = None
     
     def _check_move_mouse(self, open):
     # Checks if the current open fingers match the requirements to move the mouse
-        # if open == ['pointer']:
-        # if open in self._movable:
-        if open == ['pointer']:
-            # print('move')
+        if open in self._movable:
             self._move()
     
     def _check_left_click(self, open):
     # Checks if the current open fingers match the requirements to left click the mouse
-        if open == ['pointer', 'thumb'] and self._can_click_left:
-        # if self._open_match(open, 'thumb'):
-        # if self._thumb.get_specific_pos('top')[1] > self._pointer.get_specific_pos('mid')[1] and self._can_click:
-            self._can_click_left = False
-            # print('left click')
+        if open == ['pointer', 'thumb'] and self._clicked != 'left':
+            self._clicked = 'left'
             self._click('left')
 
     def _check_right_click(self, open):
     # Checks if the current open fingers match the requirements to right click the mouse
-        if open == ['pointer', 'middle'] and self._can_click_right:
-            self._can_click_right = False
-            # print('right click')
+        if open == ['pointer', 'middle'] and self._clicked != 'right':
+            self._clicked = 'right'
             self._click('right')
     
     def _check_scroll_up(self, open):
     # Checks if the current open fingers match the requirements to scroll up on the mouse
         if open == ['pointer', 'middle', 'ring']:
-            # print('scroll up')
             self._scroll('up')
 
     def _check_scroll_down(self, open):
     # Checks if the current open fingers match the requirements to scroll down on the mouse
         if open == ['pointer', 'middle', 'ring', 'pinky']:
-            # print('scroll down')
             self._scroll('down')
 
     def _move(self):
     # Moves the mouse to a point corresponding to the top of the pointer finger
-        (x, y, z) = self._pointer.get_specific_pos('top')
+        (x, y, _) = self._pointer.get_specific_pos('top')
 
         x = np.interp(x, (150, 490), (0, 1920))
         y = np.interp(y, (100, 250), (0, 1080))
 
-        curx = round(self._prev_pros[0] + (x - self._prev_pros[0]) / 3)
-        cury = round(self._prev_pros[1] + (y - self._prev_pros[1]) / 3)
+        curr_x = round(self._prev_pros[0] + (x - self._prev_pros[0]) / 3)
+        curr_y = round(self._prev_pros[1] + (y - self._prev_pros[1]) / 3)
 
-        self._prev_pros = (curx, cury)
+        self._prev_pros = (curr_x, curr_y)
 
-        autoit.mouse_move(curx, cury, 0)
+        autoit.mouse_move(curr_x, curr_y, 0)
     
     def _click(self, side):
-    # Clicks the mouse (right or left)
-        autoit.mouse_click(side)
+    # Holds the mouse button (right or left)
+        autoit.mouse_down(side)
+    
+    def _release_click(self, side):
+    # Releases the mouse button (right or left)
+        autoit.mouse_up(side)
 
     def _scroll(self, direction):
     # Scrolls the mouse (up or down)

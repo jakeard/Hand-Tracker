@@ -1,5 +1,4 @@
 import pyautogui
-# import pydirectinput as pdi
 import time
 
 
