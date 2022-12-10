@@ -20,6 +20,8 @@ class Mouse_Actions:
         self._pinky = fingers[4]
         self._prev_pros = (0, 0)
         self._clicked = None
+        self._can_click = True
+        self._held = 0
         self._movable = (['pointer'], ['pointer', 'thumb'], ['pointer', 'middle'])
     
     def check_match(self, open):
@@ -27,20 +29,19 @@ class Mouse_Actions:
         self._check_reset_clicks(open)
         self._check_scroll_up(open)
         self._check_scroll_down(open)
-        self._check_left_click(open)
-        self._check_right_click(open)
+        self._check_click(open, ['pointer', 'thumb'], 'left')
+        self._check_click(open, ['pointer', 'middle'], 'right')
         self._check_move_mouse(open)
     
     def _check_reset_clicks(self, open):
     # Resets the can_click variable for left and right click
-        if open != ['pointer', 'thumb'] and open != ['pointer', 'middle'] and self._clicked is not None:
-            self._release_click(self._clicked)
-            self._clicked = None
-        if open != ['pointer', 'thumb'] and self._clicked == 'left':
-            self._release_click(self._clicked)
-            self._clicked = None
-        if open != ['pointer', 'middle'] and self._clicked == 'right':
-            self._release_click(self._clicked)
+        if open != ['pointer', 'thumb'] and self._clicked == 'left' \
+            or open != ['pointer', 'middle'] and self._clicked == 'right' \
+                or open != ['pointer', 'thumb'] and open != ['pointer', 'middle'] and self._clicked is not None:
+            if self._held >= 15:
+                self._release_click(self._clicked)
+            self._held = 0
+            self._can_click = True
             self._clicked = None
     
     def _check_move_mouse(self, open):
@@ -48,17 +49,11 @@ class Mouse_Actions:
         if open in self._movable:
             self._move()
     
-    def _check_left_click(self, open):
-    # Checks if the current open fingers match the requirements to left click the mouse
-        if open == ['pointer', 'thumb'] and self._clicked != 'left':
-            self._clicked = 'left'
-            self._click('left')
-
-    def _check_right_click(self, open):
-    # Checks if the current open fingers match the requirements to right click the mouse
-        if open == ['pointer', 'middle'] and self._clicked != 'right':
-            self._clicked = 'right'
-            self._click('right')
+    def _check_click(self, open, req, side):
+    # Checks if the current open fingers match the requirements to click the mouse on the given side
+        if open == req:
+            self._clicked = side
+            self._click(side)
     
     def _check_scroll_up(self, open):
     # Checks if the current open fingers match the requirements to scroll up on the mouse
@@ -85,8 +80,13 @@ class Mouse_Actions:
         autoit.mouse_move(curr_x, curr_y, 0)
     
     def _click(self, side):
-    # Holds the mouse button (right or left)
-        autoit.mouse_down(side)
+    # Holds or clicks the mouse button (right or left)
+        self._held += 1
+        if self._held < 22 and self._can_click:
+            self._can_click = False
+            autoit.mouse_click(side)
+        elif self._held >= 22:
+            autoit.mouse_down(side)
     
     def _release_click(self, side):
     # Releases the mouse button (right or left)
